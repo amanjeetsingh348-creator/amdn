@@ -1,0 +1,468 @@
+// organize-plans.component.scss
+
+.organize-container {
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    font-family: 'Inter', sans-serif;
+    color: var(--text-primary);
+
+    // Navigation tabs now use global styles from styles.scss
+
+    .projects-content {
+        max-width: 800px;
+        margin: 0 auto;
+
+        .project-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+
+            h2 {
+                font-size: 1.5rem;
+                font-weight: 600;
+                color: var(--text-primary);
+            }
+        }
+
+        .project-item {
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            padding: 1.25rem 1.5rem;
+            border-radius: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+
+            &:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+                border-color: var(--primary-color);
+            }
+
+            .project-info {
+                display: flex;
+                flex-direction: column;
+                gap: 0.25rem;
+
+                .project-name {
+                    font-size: 1.1rem;
+                    font-weight: 600;
+                    color: var(--text-primary);
+                }
+
+                .project-date {
+                    font-size: 0.85rem;
+                    color: var(--text-muted);
+                }
+            }
+
+            .arrow-icon {
+                color: var(--text-muted);
+                font-size: 1rem;
+                transition: transform 0.2s;
+            }
+
+            &:hover .arrow-icon {
+                color: var(--primary-color);
+                transform: translateX(4px);
+            }
+        }
+    }
+
+    // Empty State
+    .empty-state {
+        text-align: center;
+        padding: 4rem 2rem;
+        background: var(--bg-secondary);
+        border-radius: 16px;
+        border: 2px dashed var(--border-color);
+        margin-top: 2rem;
+
+        .empty-icon {
+            width: 80px;
+            height: 80px;
+            background: rgba(59, 130, 246, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+
+            i {
+                font-size: 2.5rem;
+                color: var(--primary-color);
+            }
+        }
+
+        h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        p {
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+    }
+
+    // Pagination
+    .pagination-controls {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 2rem;
+        padding-top: 2rem;
+        border-top: 1px solid var(--border-color);
+        flex-wrap: wrap;
+        gap: 1rem;
+
+        .pagination-info {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .pagination-buttons {
+            display: flex;
+            gap: 0.5rem;
+
+            .btn-page {
+                width: 36px;
+                height: 36px;
+                border-radius: 8px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border: 1px solid var(--border-color);
+                background: var(--bg-card);
+                color: var(--text-primary);
+                cursor: pointer;
+                transition: all 0.2s;
+                font-weight: 500;
+
+                &:hover:not(:disabled) {
+                    background: var(--bg-hover, #f1f5f9);
+                    border-color: var(--primary-color);
+                }
+
+                &.active {
+                    background: var(--primary-color);
+                    color: white;
+                    border-color: var(--primary-color);
+                }
+
+                &:disabled {
+                    opacity: 0.5;
+                    cursor: not-allowed;
+                    background: var(--bg-secondary);
+                }
+
+                @media (prefers-color-scheme: dark) {
+                    background: #1e293b;
+                    border-color: #334155;
+                    color: #f1f5f9;
+
+                    &:hover:not(:disabled) {
+                        background: #334155;
+                    }
+
+                    &.active {
+                        background: var(--primary-color);
+                        color: white !important;
+                    }
+                }
+            }
+        }
+    }
+}
+
+// Global Button Styles (Consistent with Help/Checklists)
+.btn-primary {
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.2s;
+    text-decoration: none;
+
+    &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+    }
+
+    &.small {
+        padding: 0.5rem 1rem;
+        font-size: 0.9rem;
+    }
+}
+
+.btn-secondary {
+    background: transparent;
+    color: var(--primary-color);
+    border: 1px solid var(--primary-color);
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.2s;
+
+    &:hover {
+        background: rgba(59, 130, 246, 0.05);
+        transform: translateY(-1px);
+    }
+
+    @media (prefers-color-scheme: dark) {
+        color: #60a5fa; // Lighter blue for dark mode
+        border-color: #60a5fa;
+
+        &:hover {
+            background: rgba(96, 165, 250, 0.1);
+        }
+    }
+}
+
+// Modal Styles
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    padding: 1rem;
+    opacity: 1;
+    /* Force visible */
+    visibility: visible;
+    /* Force visible */
+
+    .modal-dialog {
+        background: var(--bg-secondary);
+        background-color: #ffffff;
+        /* Fallback/Force */
+        width: 100%;
+        max-width: 500px;
+        border-radius: 16px;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        overflow: hidden;
+        border: 1px solid var(--border-color);
+        position: relative;
+        z-index: 1001;
+        /* Ensure above overlay */
+
+        @media (prefers-color-scheme: dark) {
+            background-color: #1e293b;
+            border: 1px solid #334155;
+        }
+
+        .modal-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            h2 {
+                font-size: 1.25rem;
+                font-weight: 600;
+                margin: 0;
+                color: var(--text-primary);
+
+                @media (prefers-color-scheme: dark) {
+                    color: #f1f5f9;
+                }
+            }
+
+            .close-btn {
+                background: none;
+                border: none;
+                color: var(--text-muted);
+                font-size: 1.5rem;
+                cursor: pointer;
+                transition: color 0.2s;
+
+                &:hover {
+                    color: var(--text-primary);
+                }
+            }
+        }
+
+        .modal-body {
+            padding: 1.5rem;
+
+            .form-group {
+                label {
+                    display: block;
+                    margin-bottom: 0.5rem;
+                    font-weight: 500;
+                    color: var(--text-secondary);
+                }
+
+                input {
+                    width: 100%;
+                    padding: 0.75rem;
+                    border-radius: 8px;
+                    border: 1px solid #cbd5e1;
+                    background: #f8fafc;
+                    color: #0f172a;
+                    font-size: 1rem;
+                    transition: border-color 0.2s;
+
+                    @media (prefers-color-scheme: dark) {
+                        background: #0f172a;
+                        border-color: #475569;
+                        color: #f1f5f9;
+                    }
+
+                    &:focus {
+                        outline: none;
+                        border-color: var(--primary-color);
+                        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+                    }
+                }
+            }
+        }
+
+        .modal-footer {
+            padding: 1.5rem;
+            background: var(--bg-tertiary); // Footer contrast
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            .btn-delete {
+                background: none;
+                border: none;
+                color: #ef4444; // Red
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+                font-weight: 500;
+
+                &:hover {
+                    text-decoration: underline;
+                }
+            }
+
+            .footer-actions {
+                display: flex;
+                gap: 0.75rem;
+                margin-left: auto; // Push to right if no delete btn
+
+                .btn-cancel {
+                    padding: 0.75rem 1rem;
+                    border: none;
+                    background: none;
+                    color: var(--text-secondary);
+                    font-weight: 500;
+                    cursor: pointer;
+                    border-radius: 6px;
+
+                    &:hover {
+                        background: rgba(0, 0, 0, 0.05);
+                        color: var(--text-primary);
+                    }
+                }
+
+                .btn-save {
+                    @extend .btn-primary;
+                }
+            }
+        }
+    }
+}
+
+// ... (previous content) 
+
+.role-badge {
+    font-size: 0.7rem;
+    padding: 2px 6px;
+    border-radius: 4px;
+    margin-left: 8px;
+    font-weight: bold;
+    text-transform: uppercase;
+    vertical-align: middle;
+
+    &.owner {
+        background: #dbeafe;
+        color: #1e40af;
+    }
+
+    &.shared {
+        background: #fef3c7;
+        color: #92400e;
+    }
+}
+
+.share-section {
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border-color);
+
+    h3 {
+        font-size: 1rem;
+        color: var(--text-primary);
+        margin-bottom: 0.5rem;
+
+        @media (prefers-color-scheme: dark) {
+            color: #f1f5f9; // Explicitly light text for dark mode
+        }
+    }
+
+    .share-input-group {
+        display: flex;
+        gap: 0.5rem;
+
+        input {
+            flex: 1;
+            padding: 0.75rem;
+            border-radius: 8px;
+            border: 1px solid #cbd5e1;
+            background: #f8fafc;
+            color: #0f172a;
+
+            @media (prefers-color-scheme: dark) {
+                background: #0f172a;
+                border: 1px solid #475569;
+                color: #f1f5f9;
+            }
+
+            &:focus {
+                outline: none;
+                border-color: var(--primary-color);
+            }
+        }
+    }
+}
+
+// ... (keep Dark Mode Support)

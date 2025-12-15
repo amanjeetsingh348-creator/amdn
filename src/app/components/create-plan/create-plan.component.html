@@ -1,0 +1,144 @@
+<div class="create-plan-container">
+    <!-- Header -->
+    <div class="page-header">
+        <h1 class="page-title">Create a New Writing Plan</h1>
+        <p class="page-subtitle">Set your goals and let us help you achieve them</p>
+    </div>
+
+    <!-- Form -->
+    <form [formGroup]="planForm" (ngSubmit)="onSubmit()" class="plan-form">
+        <div class="form-card">
+            <!-- Plan Title -->
+            <div class="form-group full-width">
+                <label for="title" class="form-label">
+                    <span class="label-text">Plan Title</span>
+                    <span class="label-required">*</span>
+                </label>
+                <input type="text" formControlName="title" id="title" class="form-input"
+                    placeholder="e.g., My Novel Project">
+            </div>
+
+            <!-- Two Column Layout -->
+            <div class="form-row">
+                <!-- Total Word Goal -->
+                <div class="form-group">
+                    <label for="total_word_count" class="form-label">
+                        <span class="label-text">Total Word Goal</span>
+                        <span class="label-required">*</span>
+                    </label>
+                    <input type="number" formControlName="total_word_count" id="total_word_count" class="form-input"
+                        placeholder="50000" min="1">
+                </div>
+
+                <!-- Strategy -->
+                <div class="form-group">
+                    <label for="algorithm_type" class="form-label">
+                        <span class="label-text">Writing Strategy</span>
+                        <span class="label-required">*</span>
+                    </label>
+                    <select formControlName="algorithm_type" id="algorithm_type" class="form-input">
+                        <option value="steady">Steady (Equal daily)</option>
+                        <option value="rising">Rising Challenge (Start low, end high)</option>
+                        <option value="biting_bullet">Biting the Bullet (Start high, end low)</option>
+                        <option value="random">Random (Mix it up)</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Date Selection Row -->
+            <div class="form-row">
+                <!-- Start Date -->
+                <div class="form-group">
+                    <label for="start_date" class="form-label">
+                        <span class="label-text">Start Date</span>
+                        <span class="label-required">*</span>
+                    </label>
+                    <input type="date" formControlName="start_date" id="start_date" class="form-input date-input"
+                        [min]="today">
+                </div>
+
+                <!-- End Date -->
+                <div class="form-group">
+                    <label for="end_date" class="form-label">
+                        <span class="label-text">End Date</span>
+                        <span class="label-required">*</span>
+                    </label>
+                    <input type="date" formControlName="end_date" id="end_date" class="form-input date-input"
+                        [min]="planForm.get('start_date')?.value || today">
+                </div>
+            </div>
+
+            <!-- Info Message -->
+            <div class="info-message" *ngIf="planForm.get('start_date')?.value && planForm.get('end_date')?.value">
+                <i class="icon">ℹ️</i>
+                <span>Your plan will run for {{ calculateDays() }} days</span>
+            </div>
+        </div>
+
+        <!-- Form Actions -->
+        <div class="form-actions">
+            <button type="button" routerLink="/dashboard" class="btn-secondary">
+                Cancel
+            </button>
+            <button type="submit" [disabled]="planForm.invalid" class="btn-primary">
+                <span *ngIf="!isSubmitting">Create Plan</span>
+                <span *ngIf="isSubmitting">Creating...</span>
+            </button>
+        </div>
+
+        <!-- Error Message -->
+        <div class="error-message" *ngIf="errorMessage">
+            {{ errorMessage }}
+        </div>
+    </form>
+
+    <!-- Calendar Preview Section -->
+    <div class="calendar-preview-section" *ngIf="showCalendarPreview()">
+        <div class="preview-header">
+            <h3>📅 Plan Timeline Preview</h3>
+            <p>Visual representation of your writing plan</p>
+        </div>
+
+        <div class="calendar-grid">
+            <!-- Calendar Headers -->
+            <div class="calendar-header">Sun</div>
+            <div class="calendar-header">Mon</div>
+            <div class="calendar-header">Tue</div>
+            <div class="calendar-header">Wed</div>
+            <div class="calendar-header">Thu</div>
+            <div class="calendar-header">Fri</div>
+            <div class="calendar-header">Sat</div>
+
+            <!-- Calendar Days -->
+            <div *ngFor="let day of calendarDays" class="calendar-day" [class.empty]="!day.date"
+                [class.plan-day]="day.isPlanDay && !day.isStart && !day.isEnd" [class.start-day]="day.isStart"
+                [class.end-day]="day.isEnd" [title]="day.tooltip">
+                {{ day.displayDay }}
+            </div>
+        </div>
+
+        <!-- Preview Stats -->
+        <div class="preview-stats">
+            <div class="stat-item">
+                <div class="stat-label">Total Days</div>
+                <div class="stat-value">{{ calculateDays() }}</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-label">Daily Goal</div>
+                <div class="stat-value">{{ calculateDailyGoal() }}</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-label">Total Words</div>
+                <div class="stat-value">{{ planForm.get('total_word_count')?.value | number }}</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- No Preview Message -->
+    <div class="calendar-preview-section" *ngIf="!showCalendarPreview()">
+        <div class="no-preview">
+            <div class="icon">📆</div>
+            <p>Select start and end dates to see your plan timeline</p>
+        </div>
+    </div>
+</div>

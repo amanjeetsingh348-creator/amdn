@@ -1,0 +1,89 @@
+<app-content-loader *ngIf="loading"></app-content-loader>
+
+<div class="plan-detail-container" *ngIf="!loading && plan">
+    <!-- Top Progress Section -->
+    <div class="progress-section">
+        <div class="header-badges">
+            <span class="badge green">{{ plan.total_word_count | number }} words</span>
+            <span class="text-gray">over</span>
+            <span class="badge green">{{ plan.total_days }} days</span>
+        </div>
+
+        <div class="timeline-container">
+            <div class="date-marker start">{{ plan.start_date | date:'MM/dd/yyyy' }}</div>
+            <div class="progress-bar-track">
+                <div class="progress-bar-fill" [style.width.%]="plan.progress_percent"></div>
+            </div>
+            <div class="date-marker end">{{ plan.end_date | date:'MM/dd/yyyy' }}</div>
+        </div>
+
+        <div class="stats-badges">
+            <span class="badge blue">{{ plan.words_complete | number }} words complete</span>
+            <span class="separator">-</span>
+            <span class="badge blue">{{ plan.words_left | number }} words left</span>
+            <span class="separator">-</span>
+            <span class="badge blue">{{ plan.days_left }} days left</span>
+        </div>
+
+        <div class="circular-progress">
+            <svg viewBox="0 0 36 36">
+                <path class="circle-bg"
+                    d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                <path class="circle" [attr.stroke-dasharray]="plan.progress_percent + ', 100'"
+                    d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+            </svg>
+            <div class="percentage">{{ plan.progress_percent }}<span class="percent-sign">%</span></div>
+        </div>
+    </div>
+
+    <!-- Stats Cards Row -->
+    <div class="stats-cards-row">
+        <div class="stat-card green-card">
+            <div class="stat-value">{{ plan.avg_daily_words | number:'1.0-0' }}</div>
+            <div class="stat-label">Avg. Daily Words <i class="fas fa-star"></i></div>
+        </div>
+        <div class="stat-card green-card">
+            <div class="stat-value">{{ plan.current_streak }}</div>
+            <div class="stat-label">Current Streak <i class="fas fa-fire"></i></div>
+        </div>
+        <div class="stat-card green-card">
+            <div class="stat-value">{{ plan.longest_streak }}</div>
+            <div class="stat-label">Longest Streak <i class="fas fa-fire"></i><i class="fas fa-fire"></i></div>
+        </div>
+    </div>
+
+    <!-- Detailed Table -->
+    <div class="schedule-table-container">
+        <table class="schedule-table">
+            <thead>
+                <tr>
+                    <th>Num</th>
+                    <th>Day</th>
+                    <th>Date</th>
+                    <th>Work to Complete</th>
+                    <th>Actual Work Done</th>
+                    <th>Expected Progress</th>
+                    <th>Your Actual Progress</th>
+                    <th>Work Left</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let day of plan.schedule; let i = index" [class.highlighted]="day.is_today">
+                    <td class="num-col">{{ day.num }}</td>
+                    <td class="day-col">{{ day.date | date:'EEE' }}</td>
+                    <td class="date-col">{{ day.date | date:'MM/dd/yyyy' }}</td>
+                    <td class="target-col bold-green">{{ day.target_count | number }}</td>
+                    <td class="actual-input-col">
+                        <span *ngIf="!day.is_editable" class="actual-val" [class.zero]="day.actual_count == 0">{{
+                            day.actual_count | number }}</span>
+                        <input *ngIf="day.is_editable" type="number" [ngModel]="day.actual_count"
+                            (change)="updateProgress(day, $any($event.target).value)" class="actual-input">
+                    </td>
+                    <td class="expected-prog-col dimmed">{{ day.expected_progress | number }}</td>
+                    <td class="actual-prog-col bold-green">{{ day.actual_progress | number }}</td>
+                    <td class="work-left-col bold-green">{{ day.work_left | number }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

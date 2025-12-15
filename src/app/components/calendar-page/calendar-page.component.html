@@ -1,0 +1,45 @@
+<div class="calendar-page-container">
+    <!-- Navigation Tabs (Consistent with Plan List) -->
+    <!-- Navigation Tabs (Consistent with Plan List) -->
+    <nav class="main-tabs">
+        <a routerLink="/calendar" routerLinkActive="active" class="tab-link"><i class="fas fa-calendar-alt"></i>
+            Calendar</a>
+        <a routerLink="/plans" routerLinkActive="active" class="tab-link"><i class="fas fa-tasks"></i> Plans</a>
+        <a routerLink="/organize" routerLinkActive="active" class="tab-link"><i class="fas fa-folder"></i> Projects</a>
+        <a routerLink="/stats" routerLinkActive="active" class="tab-link"><i class="fas fa-chart-bar"></i> Stats</a>
+        <a routerLink="/community" routerLinkActive="active" class="tab-link"><i class="fas fa-users"></i>
+            Challenges</a>
+        <a routerLink="/plans" [queryParams]="{filter: 'archived'}" routerLinkActive="active" class="tab-link"><i
+                class="fas fa-archive"></i> Archives</a>
+    </nav>
+
+    <!-- View Control Buttons -->
+    <div class="view-controls-bar">
+        <div class="btn-group">
+            <button class="control-btn" [class.active]="viewMode === 'daily-total'"
+                (click)="setViewMode('daily-total')">
+                Show Daily Total Planned Work Across All Plans
+            </button>
+            <button class="control-btn" [class.active]="viewMode === 'progress-vs-plan'"
+                (click)="setViewMode('progress-vs-plan')">
+                Show Progress and Planned Work for Each Plan
+            </button>
+        </div>
+
+        <div class="btn-group">
+            <button class="control-btn" [class.active]="timeFilter === 'future'" (click)="setTimeFilter('future')">
+                Show Only Future Planned Work
+            </button>
+            <button class="control-btn" [class.active]="timeFilter === 'all'" (click)="setTimeFilter('all')">
+                Show All Work (Past and Future)
+            </button>
+        </div>
+    </div>
+
+    <div class="calendar-wrapper">
+        <app-calendar-header [monthName]="monthName" (next)="nextMonth()" (prev)="prevMonth()"></app-calendar-header>
+
+        <app-calendar-grid [currentDate]="currentDate" [targets]="targets" [viewMode]="viewMode"
+            [timeFilter]="timeFilter"></app-calendar-grid>
+    </div>
+</div>

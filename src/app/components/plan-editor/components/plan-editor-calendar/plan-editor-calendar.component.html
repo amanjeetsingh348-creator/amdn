@@ -1,0 +1,23 @@
+<div class="calendar-preview">
+    <div class="calendar-header">
+        <button (click)="prevMonth()">&lt;</button>
+        <h4>{{ monthName }}</h4>
+        <button (click)="nextMonth()">&gt;</button>
+    </div>
+
+    <div class="calendar-grid">
+        <div class="weekday" *ngFor="let day of weekDays">{{ day }}</div>
+
+        <div class="day-cell" *ngFor="let cell of calendarDays" [class.empty]="cell.empty"
+            [class.has-target]="cell.hasTarget" (click)="!cell.empty && onDayClick(cell.date)">
+
+            <span *ngIf="!cell.empty" class="day-num">{{ cell.day }}</span>
+
+            <!-- Show target below date -->
+            <div *ngIf="!cell.empty && cell.target > 0" class="plan-target">
+                {{ cell.target | number }} words
+            </div>
+
+        </div>
+    </div>
+</div>

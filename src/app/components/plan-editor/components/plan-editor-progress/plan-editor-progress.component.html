@@ -1,0 +1,42 @@
+<div class="progress-tracker">
+    <div *ngIf="loading" class="loading">Loading progress...</div>
+
+    <div *ngIf="successMessage" class="alert success">{{ successMessage }}</div>
+    <div *ngIf="error" class="alert error">{{ error }}</div>
+
+    <div class="table-container" *ngIf="!loading && dailyData.length > 0">
+        <table class="progress-table">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Target</th>
+                    <th>Actual (Logged)</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let day of dailyData" [class.today]="isToday(day.date)">
+                    <td>{{ day.date | date:'mediumDate' }}</td>
+                    <td>{{ day.target | number }}</td>
+                    <td>
+                        <input type="number" [(ngModel)]="day.logged" class="input-logged" min="0">
+                    </td>
+                    <td>
+                        <span class="status-badge" [class.met]="day.logged >= day.target"
+                            [class.missed]="day.logged < day.target">
+                            {{ day.logged >= day.target ? 'Met' : (isToday(day.date) ? 'Tracking' : 'Missed') }}
+                        </span>
+                    </td>
+                    <td>
+                        <button class="btn-save-mini" (click)="updateProgress(day)">Save</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div *ngIf="!loading && dailyData.length === 0" class="empty-state">
+        <p>No days generated for this plan yet.</p>
+    </div>
+</div>

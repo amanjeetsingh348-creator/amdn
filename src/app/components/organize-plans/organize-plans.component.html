@@ -1,0 +1,136 @@
+<div class="organize-container fade-in">
+    <!-- Top Nav Tabs -->
+    <nav class="main-tabs">
+        <a routerLink="/calendar" routerLinkActive="active" class="tab-link"><i class="fas fa-calendar-alt"></i>
+            Calendar</a>
+        <a routerLink="/plans" routerLinkActive="active" class="tab-link"><i class="fas fa-tasks"></i> Plans</a>
+        <a routerLink="/organize" routerLinkActive="active" class="tab-link active"><i class="fas fa-folder"></i>
+            Projects</a>
+        <a routerLink="/stats" routerLinkActive="active" class="tab-link"><i class="fas fa-chart-bar"></i> Stats</a>
+        <a routerLink="/challenges" routerLinkActive="active" class="tab-link"><i class="fas fa-users"></i>
+            Challenges</a>
+        <a routerLink="/plans" [queryParams]="{filter: 'archived'}" routerLinkActive="active" class="tab-link"><i
+                class="fas fa-archive"></i> Archives</a>
+    </nav>
+    <div class="split-line"></div>
+
+    <!-- Main Project List -->
+    <div class="projects-content">
+
+        <!-- Loading State -->
+        <app-content-loader *ngIf="isLoading"></app-content-loader>
+
+        <!-- Populated List -->
+        <ng-container *ngIf="!isLoading && projects.length > 0">
+            <div class="project-header">
+                <h2>Your Organization Plans</h2>
+                <button class="btn-primary small" (click)="openCreateModal()">
+                    <i class="fas fa-plus"></i> New Plan
+                </button>
+            </div>
+
+            <div class="project-item" *ngFor="let project of projects" (click)="openEditModal(project)">
+                <div class="project-info">
+                    <span class="project-name">
+                        {{ project.name }}
+                        <span class="role-badge" [class.owner]="project.role === 'owner'"
+                            [class.shared]="project.role !== 'owner'">
+                            {{ project.role === 'owner' ? 'Owner' : 'Shared' }}
+                        </span>
+                    </span>
+                    <span class="project-date">Created {{ project.created_at | date:'mediumDate' }}</span>
+                </div>
+                <!-- Prevent propagation to not open edit modal if clicking share? Actually user can open edit modal to find share button. -->
+                <i class="fas fa-chevron-right arrow-icon"></i>
+            </div>
+        </ng-container>
+
+        <!-- Empty State -->
+        <!-- ... keeping existing empty state ... -->
+        <div *ngIf="!isLoading && projects.length === 0" class="empty-state">
+            <div class="empty-icon">
+                <i class="fas fa-folder-open"></i>
+            </div>
+            <h3>No plans yet</h3>
+            <p>Organize your writing into plans.</p>
+            <div class="action-buttons">
+                <button class="btn-primary" (click)="openCreateModal()">
+                    <i class="fas fa-plus"></i> Create First Plan
+                </button>
+                <button class="btn-secondary" (click)="createExampleProjects()">
+                    <i class="fas fa-magic"></i> See Examples
+                </button>
+            </div>
+        </div>
+        <!-- Pagination Controls -->
+        <div class="pagination-controls" *ngIf="!isLoading && totalPages > 1">
+            <div class="pagination-info">
+                Showing {{ (currentPage - 1) * itemsPerPage + 1 }} -
+                {{ currentPage * itemsPerPage > totalItems ? totalItems : currentPage * itemsPerPage }}
+                of {{ totalItems }} plans
+            </div>
+            <div class="pagination-buttons">
+                <button class="btn-page" [disabled]="currentPage === 1" (click)="prevPage()">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+
+                <ng-container *ngFor="let p of pagesArray">
+                    <!-- Show limited pages logic could be added here for large numbers, keeping it simple for now -->
+                    <button class="btn-page" [class.active]="p === currentPage" (click)="loadProjects(p)">
+                        {{ p }}
+                    </button>
+                </ng-container>
+
+                <button class="btn-page" [disabled]="currentPage === totalPages" (click)="nextPage()">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create/Edit Project Modal -->
+    <div class="modal-overlay" *ngIf="showModal" (click)="closeModal()">
+        <div class="modal-dialog" (click)="$event.stopPropagation()">
+            <div class="modal-header">
+                <h2>{{ modalMode === 'create' ? 'New Organization Plan' : 'Edit Plan' }}</h2>
+                <button class="close-btn" (click)="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Plan Name</label>
+                    <input type="text" [(ngModel)]="newProjectName" placeholder="e.g. My Novel Series"
+                        (keyup.enter)="saveProject()" autofocus>
+                </div>
+
+                <!-- Share Section (Only for Owners in Edit Mode) -->
+                <div class="share-section" *ngIf="modalMode === 'edit' && selectedProject.role === 'owner'">
+                    <h3>Share Plan</h3>
+                    <div class="share-input-group">
+                        <input type="email" [(ngModel)]="shareEmail" placeholder="User email to share with">
+                        <button class="btn-secondary" (click)="shareProject()" [disabled]="!shareEmail || isSharing">
+                            <i class="fas fa-user-plus"></i> Share
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-delete" *ngIf="modalMode === 'edit' && selectedProject.role === 'owner'"
+                    (click)="deleteProject()">
+                    <i class="fas fa-trash"></i> Delete
+                </button>
+                <button class="btn-delete" *ngIf="modalMode === 'edit' && selectedProject.role !== 'owner'" disabled
+                    title="Only owner can delete">
+                    <i class="fas fa-lock"></i> Locked
+                </button>
+
+                <div class="footer-actions">
+                    <button class="btn-cancel" (click)="closeModal()">Cancel</button>
+                    <button class="btn-save" (click)="saveProject()"
+                        [disabled]="isSubmitting || !newProjectName.trim()">
+                        {{ modalMode === 'create' ? 'Create' : 'Save Changes' }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

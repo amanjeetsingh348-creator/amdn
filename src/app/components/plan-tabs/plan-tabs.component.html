@@ -1,0 +1,10 @@
+<div class="plan-tabs">
+    <div class="tab-headers">
+        <button *ngFor="let tab of tabs" [class.active]="activeTab === tab" (click)="selectTab(tab)">
+            {{ tab }}
+        </button>
+    </div>
+    <div class="tab-content">
+        <p>Content for {{ activeTab }}</p>
+    </div>
+</div>

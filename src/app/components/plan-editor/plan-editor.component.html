@@ -1,0 +1,242 @@
+<div class="plan-editor-container">
+    <!-- Top Header -->
+    <header class="editor-header">
+        <div class="header-content">
+            <div class="title-section">
+                <input type="text" [(ngModel)]="planTitle" class="title-input" placeholder="Edit me: A Brand New Goal!">
+                <input type="text" [(ngModel)]="planSubtitle" class="subtitle-input" placeholder="Activity + Content">
+            </div>
+            <div class="actions-section">
+                <button class="btn-text">Done Editing</button>
+                <button class="btn-primary" (click)="savePlan()">Save</button>
+                <button class="btn-icon">Share</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation Tabs -->
+    <nav class="editor-tabs">
+        <button [class.active]="activeTab === 'schedule'" (click)="activeTab = 'schedule'">Schedule</button>
+        <button [class.active]="activeTab === 'progress'" (click)="activeTab = 'progress'">Progress</button>
+        <button [class.active]="activeTab === 'stats'" (click)="activeTab = 'stats'">Stats</button>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="editor-main">
+        <div *ngIf="activeTab === 'schedule'" class="schedule-tab">
+
+            <!-- 1. Plan Info -->
+            <section class="editor-section">
+                <h3>Plan Info</h3>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Name</label>
+                        <input type="text" [(ngModel)]="planData.title">
+                    </div>
+                    <div class="form-group">
+                        <label>Activity</label>
+                        <select [(ngModel)]="planData.activity">
+                            <option value="writing">Writing</option>
+                            <option value="editing">Editing</option>
+                            <option value="proofreading">Proofreading</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Content</label>
+                        <select [(ngModel)]="planData.content">
+                            <option value="novel">Novel</option>
+                            <option value="thesis">Thesis</option>
+                            <option value="blog">Blog Post</option>
+                        </select>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 2. Description -->
+            <section class="editor-section">
+                <h3>Description</h3>
+                <div class="form-group">
+                    <textarea [(ngModel)]="planData.description" placeholder="Describe your plan..."
+                        rows="4"></textarea>
+                </div>
+                <div class="checkbox-group">
+                    <input type="checkbox" id="private" [(ngModel)]="planData.isPrivate">
+                    <label for="private">Make this plan private</label>
+                </div>
+            </section>
+
+            <!-- 3. Calendar -->
+            <section class="editor-section calendar-section">
+                <h3>Calendar</h3>
+                <app-plan-editor-calendar [planData]="planData"
+                    (dateSelected)="onCalendarDateSelect($event)"></app-plan-editor-calendar>
+            </section>
+
+            <!-- 4. Goals -->
+            <section class="editor-section">
+                <h3>Goals</h3>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Target Amount</label>
+                        <input type="number" [(ngModel)]="planData.totalWordCount">
+                    </div>
+                    <div class="form-group">
+                        <label>Unit</label>
+                        <select [(ngModel)]="planData.targetUnit">
+                            <option value="words">Words</option>
+                            <option value="pages">Pages</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Start Date</label>
+                        <input type="date" [(ngModel)]="planData.startDate">
+                    </div>
+                    <div class="form-group">
+                        <label>End Date</label>
+                        <input type="date" [(ngModel)]="planData.endDate">
+                    </div>
+                </div>
+            </section>
+
+            <!-- 5. Strategy -->
+            <section class="editor-section">
+                <h3>Strategy</h3>
+                <div class="strategy-options">
+                    <label class="radio-card" [class.selected]="planData.algorithmType === 'steady'">
+                        <input type="radio" name="algo" value="steady" [(ngModel)]="planData.algorithmType">
+                        <span>Steadily</span>
+                    </label>
+                    <label class="radio-card" [class.selected]="planData.algorithmType === 'rising'">
+                        <input type="radio" name="algo" value="rising" [(ngModel)]="planData.algorithmType">
+                        <span>Rising to the Challenge</span>
+                    </label>
+                    <label class="radio-card" [class.selected]="planData.algorithmType === 'biting_bullet'">
+                        <input type="radio" name="algo" value="biting_bullet" [(ngModel)]="planData.algorithmType">
+                        <span>Biting the Bullet</span>
+                    </label>
+                    <label class="radio-card" [class.selected]="planData.algorithmType === 'mountain_hike'">
+                        <input type="radio" name="algo" value="mountain_hike" [(ngModel)]="planData.algorithmType">
+                        <span>Mountain Hike</span>
+                    </label>
+                    <label class="radio-card" [class.selected]="planData.algorithmType === 'valley'">
+                        <input type="radio" name="algo" value="valley" [(ngModel)]="planData.algorithmType">
+                        <span>Valley</span>
+                    </label>
+                    <label class="radio-card" [class.selected]="planData.algorithmType === 'oscillating'">
+                        <input type="radio" name="algo" value="oscillating" [(ngModel)]="planData.algorithmType">
+                        <span>Oscillating</span>
+                    </label>
+                    <label class="radio-card" [class.selected]="planData.algorithmType === 'random'">
+                        <input type="radio" name="algo" value="random" [(ngModel)]="planData.algorithmType">
+                        <span>Randomly</span>
+                    </label>
+                </div>
+
+                <div class="intensity-selector">
+                    <h4>Intensity</h4>
+                    <div class="intensity-options">
+                        <label [class.selected]="planData.strategyIntensity === 'gentle'">
+                            <input type="radio" name="intensity" value="gentle"
+                                [(ngModel)]="planData.strategyIntensity"> Gentle
+                        </label>
+                        <label [class.selected]="planData.strategyIntensity === 'low'">
+                            <input type="radio" name="intensity" value="low" [(ngModel)]="planData.strategyIntensity">
+                            Low
+                        </label>
+                        <label [class.selected]="planData.strategyIntensity === 'average'">
+                            <input type="radio" name="intensity" value="average"
+                                [(ngModel)]="planData.strategyIntensity"> Average
+                        </label>
+                        <label [class.selected]="planData.strategyIntensity === 'medium'">
+                            <input type="radio" name="intensity" value="medium"
+                                [(ngModel)]="planData.strategyIntensity"> Medium
+                        </label>
+                        <label [class.selected]="planData.strategyIntensity === 'hard_core'">
+                            <input type="radio" name="intensity" value="hard_core"
+                                [(ngModel)]="planData.strategyIntensity"> Hard Core
+                        </label>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 6. Customizations -->
+            <section class="editor-section">
+                <h3>Customizations</h3>
+                <div class="form-group">
+                    <label>On Weekends</label>
+                    <select [(ngModel)]="planData.weekendRule">
+                        <option value="none">Do the same</option>
+                        <option value="skip">Skip (0 words)</option>
+                        <option value="less">Do less (-50%)</option>
+                        <option value="more">Do more (+50%)</option>
+                    </select>
+                </div>
+            </section>
+
+            <!-- 7. Display -->
+            <section class="editor-section">
+                <h3>Display</h3>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>View As</label>
+                        <select [(ngModel)]="planData.displaySettings.viewAs">
+                            <option value="calendar">Calendar</option>
+                            <option value="table">Table</option>
+                            <option value="graph">Graph</option>
+                            <option value="bar">Bar Chart</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Week Begins</label>
+                        <select [(ngModel)]="planData.displaySettings.weekBegins">
+                            <option value="sunday">Sunday</option>
+                            <option value="monday">Monday</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Group Progress By</label>
+                        <select [(ngModel)]="planData.displaySettings.groupBy">
+                            <option value="day">Day</option>
+                            <option value="week">Week</option>
+                            <option value="month">Month</option>
+                            <option value="year">Year</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Color</label>
+                        <input type="color" [(ngModel)]="planData.displaySettings.color"
+                            style="height: 40px; padding: 2px;">
+                    </div>
+                </div>
+            </section>
+
+            <!-- 8. Progress -->
+            <section class="editor-section">
+                <h3>Progress</h3>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>When plan changes</label>
+                        <select [(ngModel)]="planData.progressSettings.changeBehavior">
+                            <option value="recalculate">Recalculate future targets</option>
+                            <option value="ignore">Keep original targets</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>I record progress</label>
+                        <select [(ngModel)]="planData.progressSettings.recordingMode">
+                            <option value="overall">Overall (Total words so far)</option>
+                            <option value="daily">Daily (Words written today)</option>
+                        </select>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+        <div *ngIf="activeTab === 'progress'" class="progress-tab">
+            <app-plan-editor-progress [planId]="planData.id"></app-plan-editor-progress>
+        </div>
+        <div *ngIf="activeTab === 'stats'" class="stats-tab">
+            <app-stats [planId]="planData.id"></app-stats>
+        </div>
+    </main>
+</div>

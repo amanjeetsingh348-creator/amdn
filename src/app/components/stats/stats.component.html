@@ -1,0 +1,157 @@
+<div class="stats-container" *ngIf="!loading">
+    <!-- Header -->
+    <div class="stats-header">
+        <button class="btn-back" (click)="goBack()">← Back to Plans</button>
+        <div class="header-content">
+            <img src="/assets/ScribeCount-logo---promo-tile-large-white.png" alt="ScribeCount" class="scribecount-logo">
+            <h1>{{ plan?.name }} - Statistics</h1>
+        </div>
+    </div>
+
+    <!-- Summary Badges -->
+    <div class="summary-badges">
+        <div class="badge badge-primary">
+            <div class="badge-value">{{ stats?.total_logged | number }}</div>
+            <div class="badge-label">Total Work</div>
+            <div class="badge-sublabel">over {{ stats?.days_elapsed }} days</div>
+        </div>
+
+        <div class="badge badge-info">
+            <div class="badge-value">{{ stats?.days_remaining }}</div>
+            <div class="badge-label">Days Remaining</div>
+            <div class="badge-sublabel">until {{ plan?.end_date | date:'MMM d, y' }}</div>
+        </div>
+
+        <div class="badge badge-success">
+            <div class="badge-value">{{ stats?.progress_percent }}%</div>
+            <div class="badge-label">Progress</div>
+            <div class="badge-sublabel">{{ stats?.remaining_work | number }} remaining</div>
+        </div>
+
+        <div class="badge badge-warning">
+            <div class="badge-value">{{ plan?.start_date | date:'MMM d, y' }}</div>
+            <div class="badge-label">Started</div>
+            <div class="badge-sublabel">{{ stats?.total_days }} days total</div>
+        </div>
+    </div>
+
+    <!-- Chart Section -->
+    <div class="chart-section">
+        <h2>Daily Work Progress</h2>
+
+        <div class="chart-container">
+            <svg [attr.width]="chartWidth" [attr.height]="chartHeight" class="chart-svg">
+                <!-- Grid lines -->
+                <g class="grid">
+                    <line *ngFor="let label of getYAxisLabels()" [attr.x1]="chartPadding.left"
+                        [attr.y1]="getPointY(label)" [attr.x2]="chartWidth - chartPadding.right"
+                        [attr.y2]="getPointY(label)" class="grid-line" />
+                </g>
+
+                <!-- Y-axis labels -->
+                <g class="y-axis">
+                    <text *ngFor="let label of getYAxisLabels()" [attr.x]="chartPadding.left - 10"
+                        [attr.y]="getPointY(label) + 5" class="axis-label">{{ label }}</text>
+                </g>
+
+                <!-- X-axis -->
+                <line [attr.x1]="chartPadding.left" [attr.y1]="chartHeight - chartPadding.bottom"
+                    [attr.x2]="chartWidth - chartPadding.right" [attr.y2]="chartHeight - chartPadding.bottom"
+                    class="axis-line" />
+
+                <!-- Y-axis -->
+                <line [attr.x1]="chartPadding.left" [attr.y1]="chartPadding.top" [attr.x2]="chartPadding.left"
+                    [attr.y2]="chartHeight - chartPadding.bottom" class="axis-line" />
+
+                <!-- Target line (dashed) -->
+                <path [attr.d]="getTargetLinePath()" class="target-line" fill="none" stroke="#ccc" stroke-width="2"
+                    stroke-dasharray="5,5" />
+
+                <!-- Logged work line -->
+                <path [attr.d]="getLinePath()" class="data-line" fill="none" stroke="#00AEEF" stroke-width="3" />
+
+                <!-- Data points -->
+                <g class="data-points">
+                    <circle *ngFor="let point of dailyData; let i = index" [attr.cx]="getPointX(i)"
+                        [attr.cy]="getPointY(point.logged)" r="6" class="data-point"
+                        [class.active]="selectedPoint === point" (mouseenter)="onPointEnter(point)"
+                        (mouseleave)="onPointLeave()">
+                    </circle>
+                </g>
+
+                <!-- X-axis labels (show every 7th day) -->
+                <g class="x-axis">
+                    <ng-container *ngFor="let point of dailyData; let i = index">
+                        <text *ngIf="i % 7 === 0 || i === dailyData.length - 1" [attr.x]="getPointX(i)"
+                            [attr.y]="chartHeight - chartPadding.bottom + 20" class="axis-label date-label">{{
+                            formatDate(point.date) }}</text>
+                    </ng-container>
+                </g>
+            </svg>
+
+            <!-- Tooltip Box -->
+            <div class="futuristic-tooltip" *ngIf="selectedPoint" [style.left.px]="tooltipPosition.x"
+                [style.top.px]="tooltipPosition.y" [class.tooltip-bottom]="isTooltipBottom"
+                [class.tooltip-right]="isTooltipRight">
+                <div class="tooltip-content">
+                    <div class="tooltip-header">{{ formatDate(selectedPoint.date) }}</div>
+                    <div class="tooltip-body">
+                        <div class="tooltip-row">
+                            <span class="label">Logged:</span>
+                            <span class="value cyan">{{ selectedPoint.logged }}</span>
+                        </div>
+                        <div class="tooltip-row">
+                            <span class="label">Target:</span>
+                            <span class="value">{{ selectedPoint.target }}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="tooltip-line"></div>
+                <!-- Close button removed for hover interaction -->
+            </div>
+        </div>
+
+        <!-- Legend -->
+        <div class="chart-legend">
+            <div class="legend-item">
+                <span class="legend-line logged"></span>
+                <span>Logged Work</span>
+            </div>
+            <div class="legend-item">
+                <span class="legend-line target"></span>
+                <span>Daily Target</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Additional Stats -->
+    <div class="additional-stats">
+        <div class="stat-card">
+            <div class="stat-value">{{ stats?.avg_per_day | number:'1.0-0' }}</div>
+            <div class="stat-label">Average Per Day</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value">{{ stats?.daily_pace_needed | number:'1.0-0' }}</div>
+            <div class="stat-label">Daily Pace Needed</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value">{{ stats?.current_streak }}</div>
+            <div class="stat-label">Current Streak</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value">{{ stats?.longest_streak }}</div>
+            <div class="stat-label">Longest Streak</div>
+        </div>
+    </div>
+</div>
+
+<!-- Loading State -->
+<div class="loading-state" *ngIf="loading">
+    <app-content-loader></app-content-loader>
+</div>
+
+<!-- Error State -->
+<div class="error-state" *ngIf="error && !loading">
+    <p>{{ error }}</p>
+    <button class="btn-primary" (click)="goBack()">Back to Plans</button>
+</div>

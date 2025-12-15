@@ -1,0 +1,455 @@
+// Color Variables
+$primary-blue: #007bff;
+$dark-blue: #0056d2;
+$bg-light: #f9fafb;
+$bg-card: #ffffff;
+$text-primary: #1c2e4a;
+$text-secondary: #64748b;
+$border-color: #e2e8f0;
+$error-color: #dc2626;
+$info-color: #3b82f6;
+
+.create-plan-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2rem;
+    animation: fadeIn 0.4s ease-out;
+
+    // Header
+    .page-header {
+        margin-bottom: 2.5rem;
+        text-align: center;
+
+        .page-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: $text-primary;
+            margin-bottom: 0.5rem;
+        }
+
+        .page-subtitle {
+            font-size: 1rem;
+            color: $text-secondary;
+        }
+    }
+
+    // Form
+    .plan-form {
+        .form-card {
+            background: $bg-card;
+            border-radius: 16px;
+            padding: 2.5rem;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+            border: 1px solid $border-color;
+            margin-bottom: 2rem;
+        }
+
+        // Form Groups
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+
+            &.full-width {
+                width: 100%;
+                margin-bottom: 1.5rem;
+            }
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        // Labels
+        .form-label {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            font-size: 0.938rem;
+            font-weight: 600;
+            color: $text-primary;
+
+            .label-text {
+                color: $text-primary;
+            }
+
+            .label-required {
+                color: $error-color;
+                font-weight: bold;
+            }
+        }
+
+        // Inputs
+        .form-input {
+            width: 100%;
+            min-width: 100%;
+            padding: 0.875rem 1rem;
+            border: 2px solid $border-color;
+            border-radius: 10px;
+            font-size: 1rem;
+            color: $text-primary;
+            background: $bg-card;
+            transition: all 0.2s ease;
+            font-family: inherit;
+
+            &:focus {
+                outline: none;
+                border-color: $primary-blue;
+                box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+            }
+
+            &::placeholder {
+                color: lighten($text-secondary, 15%);
+            }
+
+            &:disabled {
+                background: lighten($bg-light, 2%);
+                cursor: not-allowed;
+                opacity: 0.6;
+            }
+        }
+
+        // Date Input Specific Styling
+        .date-input {
+            // Ensure calendar icon is visible
+            position: relative;
+            cursor: pointer;
+            min-height: 48px;
+
+            // Chrome, Safari, Edge
+            &::-webkit-calendar-picker-indicator {
+                cursor: pointer;
+                opacity: 1;
+                width: 20px;
+                height: 20px;
+                padding: 0;
+                margin-left: 8px;
+            }
+
+            // Firefox
+            &::-moz-calendar-picker-indicator {
+                cursor: pointer;
+            }
+
+            // Make sure the input shows properly
+            &::-webkit-datetime-edit {
+                padding: 0;
+            }
+
+            &::-webkit-datetime-edit-fields-wrapper {
+                padding: 0;
+            }
+
+            // When empty, show placeholder-like text
+            &:invalid {
+                color: lighten($text-secondary, 15%);
+            }
+
+            &:valid {
+                color: $text-primary;
+            }
+        }
+
+        // Select Dropdown
+        select.form-input {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2364748b' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            background-size: 12px;
+            padding-right: 3rem;
+            cursor: pointer;
+        }
+
+        // Info Message
+        .info-message {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            background: lighten($info-color, 45%);
+            border: 1px solid lighten($info-color, 35%);
+            border-radius: 10px;
+            padding: 1rem 1.25rem;
+            color: darken($info-color, 10%);
+            font-size: 0.938rem;
+            margin-top: 0.5rem;
+
+            .icon {
+                font-size: 1.25rem;
+            }
+        }
+
+        // Form Actions
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+            align-items: center;
+
+            button {
+                padding: 0.875rem 2rem;
+                border-radius: 10px;
+                font-weight: 600;
+                font-size: 1rem;
+                transition: all 0.2s ease;
+                border: none;
+                cursor: pointer;
+                min-width: 140px;
+
+                &:disabled {
+                    opacity: 0.5;
+                    cursor: not-allowed;
+                }
+            }
+
+            .btn-secondary {
+                background: $bg-light;
+                color: $text-secondary;
+                border: 2px solid $border-color;
+
+                &:hover:not(:disabled) {
+                    background: darken($bg-light, 3%);
+                    border-color: darken($border-color, 10%);
+                }
+            }
+
+            .btn-primary {
+                background: linear-gradient(135deg, $primary-blue, $dark-blue);
+                color: white;
+                box-shadow: 0 4px 12px rgba(0, 123, 255, 0.25);
+
+                &:hover:not(:disabled) {
+                    transform: translateY(-2px);
+                    box-shadow: 0 6px 20px rgba(0, 123, 255, 0.35);
+                }
+
+                &:active:not(:disabled) {
+                    transform: translateY(0);
+                }
+            }
+        }
+
+        // Error Message
+        .error-message {
+            margin-top: 1rem;
+            padding: 1rem 1.25rem;
+            background: lighten($error-color, 45%);
+            border: 1px solid lighten($error-color, 35%);
+            border-radius: 10px;
+            color: darken($error-color, 5%);
+            font-size: 0.938rem;
+            font-weight: 500;
+        }
+    }
+}
+
+// Animations
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+// Angular Form States - Specific to Create Plan
+.create-plan-container {
+    .ng-pristine.ng-valid.ng-touched {
+        min-width: 100%;
+    }
+}
+
+// Calendar Preview Section
+.calendar-preview-section {
+    background: $bg-card;
+    border-radius: 16px;
+    padding: 2rem;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    border: 1px solid $border-color;
+    margin-top: 2rem;
+    animation: slideUp 0.4s ease-out;
+
+    .preview-header {
+        text-align: center;
+        margin-bottom: 1.5rem;
+
+        h3 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: $text-primary;
+            margin-bottom: 0.5rem;
+        }
+
+        p {
+            font-size: 0.938rem;
+            color: $text-secondary;
+        }
+    }
+
+    .calendar-grid {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 0.5rem;
+
+        .calendar-header {
+            text-align: center;
+            font-size: 0.813rem;
+            font-weight: 600;
+            color: $text-secondary;
+            padding: 0.5rem;
+        }
+
+        .calendar-day {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            background: $bg-light;
+            color: $text-secondary;
+            border: 1px solid $border-color;
+            transition: all 0.2s ease;
+
+            &.empty {
+                background: transparent;
+                border: none;
+            }
+
+            &.plan-day {
+                background: lighten($primary-blue, 42%);
+                border-color: lighten($primary-blue, 30%);
+                color: $primary-blue;
+                font-weight: 600;
+            }
+
+            &.start-day {
+                background: linear-gradient(135deg, $primary-blue, $dark-blue);
+                color: white;
+                border: none;
+                box-shadow: 0 2px 8px rgba(0, 123, 255, 0.3);
+            }
+
+            &.end-day {
+                background: linear-gradient(135deg, darken($primary-blue, 5%), darken($dark-blue, 5%));
+                color: white;
+                border: none;
+                box-shadow: 0 2px 8px rgba(0, 123, 255, 0.3);
+            }
+        }
+    }
+
+    .preview-stats {
+        margin-top: 1.5rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid $border-color;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1rem;
+
+        .stat-item {
+            text-align: center;
+            padding: 1rem;
+            background: lighten($bg-light, 2%);
+            border-radius: 10px;
+
+            .stat-label {
+                font-size: 0.813rem;
+                color: $text-secondary;
+                margin-bottom: 0.5rem;
+            }
+
+            .stat-value {
+                font-size: 1.5rem;
+                font-weight: 700;
+                color: $primary-blue;
+            }
+        }
+    }
+
+    .no-preview {
+        text-align: center;
+        padding: 3rem 2rem;
+        color: $text-secondary;
+
+        .icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        p {
+            font-size: 0.938rem;
+        }
+    }
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+// Responsive Design
+@media (max-width: 768px) {
+    .create-plan-container {
+        padding: 1rem;
+
+        .page-header {
+            margin-bottom: 1.5rem;
+
+            .page-title {
+                font-size: 1.5rem;
+            }
+        }
+
+        .plan-form {
+            .form-card {
+                padding: 1.25rem;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .form-actions {
+                flex-direction: column-reverse;
+
+                button {
+                    width: 100%;
+                    padding: 0.75rem;
+                }
+            }
+        }
+    }
+
+    .calendar-preview-section {
+        padding: 1.5rem;
+
+        .preview-stats {
+            grid-template-columns: 1fr;
+            gap: 0.75rem;
+        }
+
+        .calendar-grid {
+            gap: 0.25rem;
+
+            .calendar-day {
+                font-size: 0.75rem;
+            }
+        }
+    }
+}

@@ -1,0 +1,270 @@
+.plan-detail-container {
+    padding: 2rem;
+    max-width: 100%;
+    margin: 0 auto;
+    font-family: 'Inter', sans-serif;
+    color: #333;
+
+    /* Top Progress Section */
+    .progress-section {
+        position: relative;
+        text-align: center;
+        margin-bottom: 3rem;
+        padding-right: 120px; // Space for circle
+
+        .header-badges {
+            margin-bottom: 1rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0.5rem;
+
+            .badge {
+                padding: 0.4rem 0.8rem;
+                border-radius: 4px;
+                color: white;
+                font-weight: 600;
+                font-size: 0.9rem;
+
+                &.green {
+                    background-color: #5cb85c;
+                }
+
+                // Bootstrap success green shade
+            }
+
+            .text-gray {
+                font-size: 0.9rem;
+                color: #666;
+            }
+        }
+
+        .timeline-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+
+            .date-marker {
+                background-color: #5bc0de; // Info blue
+                color: white;
+                padding: 0.2rem 0.5rem;
+                border-radius: 3px;
+                font-size: 0.8rem;
+                font-weight: 600;
+                white-space: nowrap;
+            }
+
+            .progress-bar-track {
+                flex-grow: 1;
+                height: 10px;
+                background-color: #e9ecef;
+                border-radius: 5px;
+                overflow: hidden;
+
+                .progress-bar-fill {
+                    height: 100%;
+                    background-color: #5cb85c;
+                }
+            }
+        }
+
+        .stats-badges {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0.5rem;
+
+            .badge.blue {
+                background-color: #5bc0de;
+                color: white;
+                padding: 0.2rem 0.6rem;
+                border-radius: 3px;
+                font-size: 0.85rem;
+            }
+
+            .separator {
+                color: #ccc;
+            }
+        }
+
+        .circular-progress {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100px;
+            height: 100px;
+
+            svg {
+                width: 100%;
+                height: 100%;
+                transform: rotate(-90deg); // Start from top
+
+                .circle-bg {
+                    fill: none;
+                    stroke: #eee;
+                    stroke-width: 3.8;
+                }
+
+                .circle {
+                    fill: none;
+                    stroke: #5cb85c;
+                    stroke-width: 3.8; // Match image thickness
+                    stroke-linecap: round; // Or butt for cleaner specific percent
+                }
+            }
+
+            .percentage {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                font-size: 2rem;
+                font-weight: 700;
+                color: #555;
+
+                .percent-sign {
+                    font-size: 1rem;
+                    color: #999;
+                }
+            }
+        }
+    }
+
+    /* Stats Cards Row */
+    .stats-cards-row {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 2rem;
+        margin-bottom: 3rem;
+
+        .stat-card.green-card {
+            background-color: #28a745; // Deep green
+            color: white;
+            padding: 1.5rem;
+            text-align: center;
+            border-radius: 4px; // Sharpish
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+            .stat-value {
+                font-size: 2.5rem;
+                font-weight: 400; // Thin font
+                margin-bottom: 0.2rem;
+            }
+
+            .stat-label {
+                font-size: 0.9rem;
+                text-transform: uppercase;
+                opacity: 0.9;
+                font-weight: 600;
+
+                i {
+                    margin-left: 0.3rem;
+                }
+            }
+        }
+    }
+
+    /* Table */
+    .schedule-table-container {
+        border-top: 1px solid #eee;
+
+        .schedule-table {
+            width: 100%;
+            border-collapse: collapse;
+
+            th {
+                color: #666;
+                font-weight: 700;
+                font-size: 0.85rem;
+                text-align: right;
+                padding: 1rem;
+                border-bottom: 1px solid #eee;
+
+                &:nth-child(1),
+                &:nth-child(2),
+                &:nth-child(3) {
+                    text-align: left;
+                }
+            }
+
+            td {
+                padding: 0.8rem 1rem;
+                font-size: 0.9rem;
+                border-bottom: 1px solid #f9f9f9;
+                color: #5cb85c; // Base green text
+                font-family: monospace, sans-serif; // Monospace for numbers looks tabular
+                text-align: right;
+
+                &:nth-child(1),
+                &:nth-child(2),
+                &:nth-child(3) {
+                    text-align: left;
+                }
+
+                &.num-col,
+                &.day-col,
+                &.date-col {
+                    color: #5cb85c;
+                }
+
+                &.target-col {
+                    font-weight: 700;
+                    color: #28a745;
+                }
+
+                &.actual-prog-col,
+                &.work-left-col {
+                    font-weight: 700;
+                    color: #28a745;
+                }
+
+                &.dimmed {
+                    color: #88c988;
+                }
+
+                // Lighter green for expected
+
+                .actual-input {
+                    width: 70px;
+                    padding: 0.2rem;
+                    text-align: right;
+                    border: 1px solid #ddd;
+                    border-radius: 3px;
+                }
+
+                .actual-val {
+                    color: #28a745;
+
+                    &.zero {
+                        color: #28a745;
+                    }
+                }
+            }
+
+            tr:hover {
+                background-color: #fbfffa;
+            }
+        }
+    }
+}
+
+@media (max-width: 768px) {
+    .stats-cards-row {
+        grid-template-columns: 1fr;
+    }
+
+    .progress-section {
+        padding-right: 0;
+
+        .circular-progress {
+            position: relative;
+            margin: 1rem auto;
+        }
+    }
+
+    .timeline-container {
+        flex-direction: column;
+    }
+}

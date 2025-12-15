@@ -1,0 +1,148 @@
+<div class="plan-list-container">
+    <!-- Top Header -->
+    <header class="list-header">
+        <div class="user-info">
+            <h1>{{ userName }}</h1>
+        </div>
+        <div class="header-actions">
+            <button class="btn-secondary" routerLink="/settings">Account Settings</button>
+            <button class="btn-secondary" routerLink="/stats">Your Stats</button>
+        </div>
+    </header>
+
+    <!-- Navigation Tabs -->
+    <!-- Navigation Tabs -->
+    <nav class="main-tabs">
+        <a routerLink="/calendar" routerLinkActive="active" class="tab-link"><i class="fas fa-calendar-alt"></i>
+            Calendar</a>
+        <a routerLink="/plans" routerLinkActive="active" class="tab-link"><i class="fas fa-tasks"></i> Plans</a>
+        <a routerLink="/organize" routerLinkActive="active" class="tab-link"><i class="fas fa-folder"></i> Projects</a>
+        <a routerLink="/stats" routerLinkActive="active" class="tab-link"><i class="fas fa-chart-bar"></i> Stats</a>
+        <a routerLink="/challenges" routerLinkActive="active" class="tab-link"><i class="fas fa-users"></i>
+            Challenges</a>
+        <a routerLink="/plans" [queryParams]="{filter: 'archived'}" routerLinkActive="active" class="tab-link"><i
+                class="fas fa-archive"></i> Archives</a>
+    </nav>
+
+    <!-- Controls Bar -->
+    <div class="controls-bar">
+        <div class="search-box">
+            <i class="fas fa-search"></i>
+            <input type="text" placeholder="Search plans..." [(ngModel)]="searchTerm" (input)="onSearch()">
+        </div>
+        <div class="controls-actions">
+            <div class="pagination-size">
+                <label>Show:</label>
+                <select [(ngModel)]="pageSize" (change)="onPageSizeChange()">
+                    <option [value]="10">10</option>
+                    <option [value]="25">25</option>
+                    <option [value]="50">50</option>
+                </select>
+            </div>
+            <button class="btn-primary create-btn" (click)="createNewPlan()">+ New Plan</button>
+        </div>
+    </div>
+
+    <!-- Plans Table -->
+    <div class="table-responsive">
+        <table class="plans-table">
+            <thead>
+                <tr>
+                    <th (click)="sort('plan_name')">Plan Name <span class="sort-icon"
+                            *ngIf="sortColumn === 'plan_name'">{{ sortDirection === 'asc' ? '▲' : '▼' }}</span></th>
+                    <th (click)="sort('goal_amount')">Goal <span class="sort-icon"
+                            *ngIf="sortColumn === 'goal_amount'">{{ sortDirection === 'asc' ? '▲' : '▼' }}</span></th>
+                    <th (click)="sort('start_date')">Start Date <span class="sort-icon"
+                            *ngIf="sortColumn === 'start_date'">{{ sortDirection === 'asc' ? '▲' : '▼' }}</span></th>
+                    <th (click)="sort('end_date')">Deadline <span class="sort-icon" *ngIf="sortColumn === 'end_date'">{{
+                            sortDirection === 'asc' ? '▲' : '▼' }}</span></th>
+                    <th (click)="sort('percent_done')">% Done <span class="sort-icon"
+                            *ngIf="sortColumn === 'percent_done'">{{ sortDirection === 'asc' ? '▲' : '▼' }}</span></th>
+                    <th (click)="sort('completed_amount')">What's Done <span class="sort-icon"
+                            *ngIf="sortColumn === 'completed_amount'">{{ sortDirection === 'asc' ? '▲' : '▼' }}</span>
+                    </th>
+                    <th (click)="sort('what_is_left')">What's Left <span class="sort-icon"
+                            *ngIf="sortColumn === 'what_is_left'">{{ sortDirection === 'asc' ? '▲' : '▼' }}</span></th>
+                    <th (click)="sort('days_left')">Days Left <span class="sort-icon"
+                            *ngIf="sortColumn === 'days_left'">{{ sortDirection === 'asc' ? '▲' : '▼' }}</span></th>
+                    <th (click)="sort('status')">Status <span class="sort-icon" *ngIf="sortColumn === 'status'">{{
+                            sortDirection === 'asc' ? '▲' : '▼' }}</span></th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngIf="isLoading">
+                    <td colspan="10" style="padding: 2rem;">
+                        <app-content-loader></app-content-loader>
+                    </td>
+                </tr>
+                <ng-container *ngIf="!isLoading">
+                    <tr *ngFor="let plan of paginatedPlans" [class.archived]="plan.is_archived">
+                        <td class="name-col">
+                            <a (click)="openPlan(plan.id)" class="plan-link">
+                                <i class="fas fa-lock" *ngIf="plan.is_private" title="Private Plan"></i>
+                                {{ plan.plan_name }}
+                            </a>
+                        </td>
+                        <td>{{ plan.goal_amount | number }} {{ plan.goal_unit }}</td>
+                        <td>{{ plan.start_date | date:'MMM d, y' }}</td>
+                        <td>{{ plan.end_date | date:'MMM d, y' }}</td>
+                        <td>
+                            <div class="progress-wrapper">
+                                <div class="progress-bar" [style.width.%]="plan.percent_done"></div>
+                                <span class="progress-text">{{ plan.percent_done }}%</span>
+                            </div>
+                        </td>
+                        <td>{{ plan.completed_amount | number }}</td>
+                        <td>{{ plan.what_is_left | number }}</td>
+                        <td [class.overdue]="plan.days_left < 0">{{ plan.days_left > 0 ? plan.days_left : 'Ended' }}
+                        </td>
+                        <td><span class="status-badge" [class.active]="plan.status === 'active'">{{ plan.status
+                                }}</span>
+                        </td>
+                        <td class="actions-col">
+                            <button class="btn-icon" *ngIf="!plan.is_archived" (click)="archivePlan(plan)"
+                                title="Archive"><i class="fas fa-archive"></i></button>
+                            <button class="btn-icon" *ngIf="plan.is_archived" (click)="unarchivePlan(plan)"
+                                title="Unarchive"><i class="fas fa-box-open"></i></button>
+                            <button class="btn-icon delete" (click)="deletePlan(plan)" title="Delete"><i
+                                    class="fas fa-trash"></i></button>
+                        </td>
+                    </tr>
+                    <tr *ngIf="paginatedPlans.length === 0">
+                        <td colspan="10" class="empty-state">
+                            <p>No plans found.</p>
+                            <button class="btn-primary" (click)="createNewPlan()">Create a Plan</button>
+                        </td>
+                    </tr>
+                </ng-container>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Pagination -->
+    <div class="pagination-controls" *ngIf="totalPages > 1">
+        <button (click)="prevPage()" [disabled]="currentPage === 1">Previous</button>
+        <span>Page {{ currentPage }} of {{ totalPages }}</span>
+        <button (click)="nextPage()" [disabled]="currentPage === totalPages">Next</button>
+    </div>
+
+    <!-- Confirmation Modal -->
+    <div class="modal-overlay" *ngIf="showConfirmation" (click)="cancelConfirmation()">
+        <div class="modal-container" (click)="$event.stopPropagation()">
+            <div class="modal-header">
+                <h3>{{ confirmationTitle }}</h3>
+            </div>
+            <div class="modal-body">
+                <p>{{ confirmationMessage }}</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-cancel" (click)="cancelConfirmation()">Cancel</button>
+                <button class="btn-confirm" [class.btn-delete]="confirmationActionType === 'delete'"
+                    (click)="confirmAction()">
+                    {{ confirmationActionType === 'delete' ? 'Delete' : 'Archive' }}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

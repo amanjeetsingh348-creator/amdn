@@ -1,0 +1,65 @@
+<div class="dashboard-container">
+    <!-- Header Section -->
+    <div class="dashboard-header">
+        <div class="header-content">
+            <h1 class="page-title">Your Plans</h1>
+            <p class="page-subtitle">Manage and track all your writing goals in one place</p>
+        </div>
+        <a routerLink="/create-plan" class="btn-create-plan">
+            <span class="icon">+</span>
+            Create New Plan
+        </a>
+    </div>
+
+    <!-- Plans Grid -->
+    <div class="plans-grid" *ngIf="plans.length > 0">
+        <div *ngFor="let plan of plans" class="plan-card">
+            <div class="plan-header">
+                <a [routerLink]="['/plan-editor', plan.id]" class="plan-title">{{ plan.plan_name }}</a>
+                <span class="plan-status" [class]="'status-' + (plan.status ? plan.status.toLowerCase() : 'active')">
+                    {{ plan.status || 'Active' }}
+                </span>
+            </div>
+
+            <div class="plan-details">
+                <div class="detail-item">
+                    <i class="icon">🎯</i>
+                    <div>
+                        <span class="detail-label">Goal</span>
+                        <span class="detail-value">{{ plan.goal_amount | number }} words</span>
+                    </div>
+                </div>
+
+                <div class="detail-item">
+                    <i class="icon">📅</i>
+                    <div>
+                        <span class="detail-label">Timeline</span>
+                        <span class="detail-value">{{ plan.start_date }} - {{ plan.end_date }}</span>
+                    </div>
+                </div>
+
+                <div class="detail-item">
+                    <i class="icon">⚙️</i>
+                    <div>
+                        <span class="detail-label">Strategy</span>
+                        <span class="detail-value">{{ plan.strategy }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="plan-footer">
+                <a [routerLink]="['/plan-editor', plan.id]" class="btn-view-plan">View Plan</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="plans.length === 0" class="empty-state">
+        <div class="empty-icon">📝</div>
+        <h3 class="empty-title">No plans yet</h3>
+        <p class="empty-description">Create your first plan to start tracking your writing goals</p>
+        <a routerLink="/create-plan" class="btn-create-first">
+            Create Your First Plan
+        </a>
+    </div>
+</div>
