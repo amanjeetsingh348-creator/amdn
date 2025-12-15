@@ -1,0 +1,25 @@
+
+# compiled output
+/dist
+/tmp
+/out-tsc
+/bazel-out
+
+# dependencies
+/node_modules
+
+# analytics
+.analytics.json
+
+# angular
+/.angular
+
+# miscellaneous
+.DS_Store
+.cache
+.project
+.settings
+.vscode
+*.log
+build_log.txt
+build_output.txt
